@@ -32,30 +32,43 @@ def set_threshold():
         try:
             new_threshold = int(request.form['threshold'])
             sensor_data['threshold'] = new_threshold
-            message = "✅ Threshold updated to " + str(new_threshold)
+            message = f"✅ Threshold updated to {new_threshold}"
         except:
             message = "❌ Invalid input. Please enter a number."
 
-    # Render simple HTML GUI
+    # Enhanced HTML page
     html = '''
     <html>
         <head>
-            <title>Set Threshold</title>
+            <title>IoT Control Panel</title>
         </head>
-        <body style="font-family:sans-serif; max-width: 500px; margin: auto; padding: 20px;">
-            <h2>🌱 IoT Control Panel</h2>
-            <p>Current Threshold: <b>{{ threshold }}</b></p>
+        <body style="font-family:sans-serif; max-width: 600px; margin: auto; padding: 20px;">
+            <h2>🌿 IoT Sensor Dashboard</h2>
+            <table border="1" cellpadding="10" cellspacing="0">
+                <tr><th>Sensor</th><th>Value</th></tr>
+                <tr><td>🌡️ Temperature</td><td>{{ temperature }} °C</td></tr>
+                <tr><td>💧 Humidity</td><td>{{ humidity }} %</td></tr>
+                <tr><td>🌱 Soil Moisture</td><td>{{ soil_moisture }} %</td></tr>
+                <tr><td>🎚️ Threshold</td><td><b>{{ threshold }} %</b></td></tr>
+            </table>
+
+            <h3>🔧 Update Threshold</h3>
             <form method="POST">
-                <label for="threshold">New Threshold:</label><br>
+                <label for="threshold">New Threshold (%):</label><br>
                 <input type="number" name="threshold" min="0" max="100" value="{{ threshold }}" required>
                 <br><br>
                 <button type="submit">Update</button>
             </form>
+
             <p style="color: green;">{{ message }}</p>
         </body>
     </html>
     '''
-    return render_template_string(html, threshold=sensor_data["threshold"], message=message)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    return render_template_string(
+        html,
+        temperature=sensor_data["temperature"],
+        humidity=sensor_data["humidity"],
+        soil_moisture=sensor_data["soil_moisture"],
+        threshold=sensor_data["threshold"],
+        message=message
+    )
